@@ -345,13 +345,6 @@ func (lep *logsAndEventsProcessor) getExecutionOrder(lgData *logsData, logHashHe
 	return -1
 }
 
-// FinalizeDRWARecords will finalize all DRWA records for a given block hash
-func (lep *logsAndEventsProcessor) FinalizeDRWARecords(shardID uint32, headerHash []byte) error {
-	// Not implemented yet - this is a stub to satisfy the interface
-	// In a real implementation, this would use UpdateByQuery to set isFinalized: true
-	return nil
-}
-
 func hexEncodeSlice(input [][]byte) []string {
 	hexEncoded := make([]string, 0, len(input))
 	for idx := 0; idx < len(input); idx++ {

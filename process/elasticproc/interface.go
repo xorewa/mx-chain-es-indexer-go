@@ -127,7 +127,6 @@ type DBLogsAndEventsHandler interface {
 	SerializeDRWAControlEvents(records []*data.DrwaControlEventRecord, buffSlice *data.BufferSlice, index string) error
 	SerializeMRVAnchoredProofs(records []*data.MrvAnchoredProofRecord, buffSlice *data.BufferSlice, index string) error
 	PrepareDelegatorsQueryInCaseOfRevert(timestampMs uint64) *bytes.Buffer
-	FinalizeDRWARecords(shardID uint32, headerHash []byte) error
 	IsInterfaceNil() bool
 }
 
