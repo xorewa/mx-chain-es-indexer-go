@@ -16,7 +16,7 @@ func TestPreparedLogsResultsDRWAMRVFieldsZeroValueIsIterable(t *testing.T) {
 		}
 		for range results.DrwaIdentities {
 		}
-		for range results.DrwaHolderCompliance {
+		for range results.DrwaHolderCompliances {
 		}
 		for range results.DrwaAttestations {
 		}
@@ -30,7 +30,7 @@ func TestPreparedLogsResultsDRWAMRVFieldsZeroValueIsIterable(t *testing.T) {
 
 	require.Nil(t, results.DrwaDenials)
 	require.Nil(t, results.DrwaIdentities)
-	require.Nil(t, results.DrwaHolderCompliance)
+	require.Nil(t, results.DrwaHolderCompliances)
 	require.Nil(t, results.DrwaAttestations)
 	require.Nil(t, results.DrwaTokenPolicies)
 	require.Nil(t, results.DrwaControlEvents)

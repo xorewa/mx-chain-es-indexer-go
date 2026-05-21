@@ -63,11 +63,6 @@ func (eim *ElasticProcessorStub) RemoveTransactions(header coreData.HeaderHandle
 	return nil
 }
 
-// FinalizedBlock -
-func (eim *ElasticProcessorStub) FinalizedBlock(_ *outport.FinalizedBlock) error {
-	return nil
-}
-
 // SaveMiniblocks -
 func (eim *ElasticProcessorStub) SaveMiniblocks(outportBlockWithHeader *outport.OutportBlockWithHeader) error {
 	if eim.SaveMiniblocksCalled != nil {
