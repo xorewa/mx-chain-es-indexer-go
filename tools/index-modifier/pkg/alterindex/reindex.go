@@ -2,6 +2,7 @@ package alterindex
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"math"
 	"time"
@@ -66,7 +67,7 @@ func (im *indexModifier) AlterIndex(indexRead, indexWrite string, modifier func(
 		}
 
 		for i := 0; i < len(dataBuffers); i++ {
-			err = im.bulkClient.DoBulkRequest(dataBuffers[i], indexWrite)
+			err = im.bulkClient.DoBulkRequest(context.Background(), dataBuffers[i], indexWrite)
 			if err != nil {
 				return fmt.Errorf("%w while r.destinationElastic.DoBulkRequest", err)
 			}

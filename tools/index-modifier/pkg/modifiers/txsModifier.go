@@ -57,7 +57,7 @@ func createOperationParser() (transactions.DataFieldParser, error) {
 }
 
 func createPubKeyConverterAndParser() (core.PubkeyConverter, transactions.DataFieldParser, error) {
-	pubKeyConverter, err := pubkeyConverter.NewBech32PubkeyConverter(32, log)
+	pubKeyConverter, err := pubkeyConverter.NewBech32PubkeyConverter(32, "erd")
 	if err != nil {
 		return nil, nil, err
 	}
@@ -149,7 +149,7 @@ func (tm *txsModifier) prepareTxForIndexing(tx *data.Transaction) error {
 		return err
 	}
 
-	res := tm.operationDataParser.Parse(tx.Data, sndAddr, rcvAddr, 3)
+	res := tm.operationDataParser.Parse(tx.Data, sndAddr, rcvAddr, 3, 0)
 
 	// TODO uncomment this when create index `operations`
 	// tx.Type = string(transaction.TxTypeNormal)

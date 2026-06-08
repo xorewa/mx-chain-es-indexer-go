@@ -50,9 +50,15 @@ func (bc *balanceChecker) fixWrongBalance(addr, identifier string, timestamp uin
 	}
 
 	balanceBig, _ := big.NewInt(0).SetString(balanceFromProxy, 10)
-	balanceFloat := bc.balanceToFloat.ComputeESDTBalanceAsFloat(balanceBig)
+	balanceFloat, err := bc.balanceToFloat.ConvertBigValueToFloat(balanceBig)
+	if err != nil {
+		return err
+	}
 	if identifier == "" {
-		balanceFloat = bc.balanceToFloat.ComputeBalanceAsFloat(balanceBig)
+		balanceFloat, err = bc.balanceToFloat.ComputeBalanceAsFloat(balanceBig)
+		if err != nil {
+			return err
+		}
 	}
 
 	id := prepareID(addr, identifier)
@@ -68,7 +74,7 @@ func (bc *balanceChecker) fixWrongBalance(addr, identifier string, timestamp uin
 	buffSlice := data.NewBufferSlice(0)
 	_ = buffSlice.PutData(meta, []byte(serializedDataStr))
 
-	err := bc.esClient.DoBulkRequest(buffSlice.Buffers()[0], index)
+	err = bc.esClient.DoBulkRequest(buffSlice.Buffers()[0], index)
 	if err != nil {
 		return err
 	}

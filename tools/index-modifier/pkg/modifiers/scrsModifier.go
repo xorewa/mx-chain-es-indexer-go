@@ -110,7 +110,7 @@ func (sm *scrsModifier) prepareSCRForIndexing(scr *data.ScResult) error {
 		return err
 	}
 
-	res := sm.operationDataParser.Parse(scr.Data, sndAddr, rcvAddr, 3)
+	res := sm.operationDataParser.Parse(scr.Data, sndAddr, rcvAddr, 3, 0)
 
 	// TODO uncomment this when create index `operations`
 	//scr.Type = string(transaction.TxTypeUnsigned)

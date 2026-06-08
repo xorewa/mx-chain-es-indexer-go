@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"math/big"
 	"time"
 
 	"github.com/multiversx/mx-chain-core-go/core"
 	"github.com/multiversx/mx-chain-core-go/core/check"
 	indexerData "github.com/multiversx/mx-chain-es-indexer-go/data"
-	indexer "github.com/multiversx/mx-chain-es-indexer-go/process/dataindexer"
 	"github.com/multiversx/mx-chain-es-indexer-go/tools/accounts-balance-checker/pkg/utils"
 	logger "github.com/multiversx/mx-chain-logger-go"
 )
@@ -21,8 +21,13 @@ const (
 
 var log = logger.GetOrCreate("checker")
 
+type balanceConverterHandler interface {
+	ComputeBalanceAsFloat(balance *big.Int) (float64, error)
+	ConvertBigValueToFloat(balance *big.Int) (float64, error)
+}
+
 type balanceChecker struct {
-	balanceToFloat              indexer.BalanceConverter
+	balanceToFloat              balanceConverterHandler
 	pubKeyConverter             core.PubkeyConverter
 	esClient                    ESClientHandler
 	restClient                  RestClientHandler
@@ -36,7 +41,7 @@ func NewBalanceChecker(
 	esClient ESClientHandler,
 	restClient RestClientHandler,
 	pubKeyConverter core.PubkeyConverter,
-	balanceToFloat indexer.BalanceConverter,
+	balanceToFloat balanceConverterHandler,
 	repair bool,
 	maxNumberOfRequestsInParallel int,
 ) (*balanceChecker, error) {

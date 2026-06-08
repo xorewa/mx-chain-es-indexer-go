@@ -189,7 +189,7 @@ func (bc *balanceChecker) compareBalances(balancesFromES, balancesFromProxy map[
 	return false
 }
 
-func (bc *balanceChecker) getLasTimeWhenBalanceWasChanged(identifier, address string) (time.Duration, string) {
+func (bc *balanceChecker) getLasTimeWhenBalanceWasChanged(identifier, address string) (uint64, string) {
 	query := queryGetLastTxForToken(identifier, address)
 	if identifier == "" {
 		query = queryGetLastOperationForAddress(address)
