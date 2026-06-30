@@ -1,0 +1,74 @@
+{
+  "index_patterns": [
+    "drwa-holder-compliance-*"
+  ],
+  "template": {
+    "settings": {
+      "number_of_replicas": 0,
+      "number_of_shards": 3
+    },
+    "mappings": {
+      "properties": {
+        "txHash": {
+          "type": "keyword"
+        },
+        "tokenId": {
+          "type": "keyword"
+        },
+        "holder": {
+          "type": "keyword"
+        },
+        "blockHash": {
+          "type": "keyword"
+        },
+        "blockRound": {
+          "type": "long"
+        },
+        "isFinalized": {
+          "type": "boolean"
+        },
+        "shardID": {
+          "type": "long"
+        },
+        "eventOrder": {
+          "type": "long"
+        },
+        "holderPolicyVersion": {
+          "type": "long"
+        },
+        "kycStatus": {
+          "type": "keyword"
+        },
+        "amlStatus": {
+          "type": "keyword"
+        },
+        "investorClass": {
+          "type": "keyword"
+        },
+        "jurisdictionCode": {
+          "type": "keyword"
+        },
+        "transferLocked": {
+          "type": "boolean"
+        },
+        "receiveLocked": {
+          "type": "boolean"
+        },
+        "auditorAuthorized": {
+          "type": "boolean"
+        },
+        "expiryRound": {
+          "type": "long"
+        },
+        "timestamp": {
+          "type": "date",
+          "format": "epoch_second"
+        },
+        "timestampMs": {
+          "type": "date",
+          "format": "epoch_millis"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "index_patterns": [
+    "drwa-control-events-*"
+  ],
+  "template": {
+    "settings": {
+      "number_of_replicas": 0,
+      "number_of_shards": 3
+    },
+    "mappings": {
+      "properties": {
+        "txHash": {
+          "type": "keyword"
+        },
+        "eventType": {
+          "type": "keyword"
+        },
+        "governance": {
+          "type": "keyword"
+        },
+        "topics": {
+          "type": "keyword"
+        },
+        "blockHash": {
+          "type": "keyword"
+        },
+        "blockRound": {
+          "type": "long"
+        },
+        "isFinalized": {
+          "type": "boolean"
+        },
+        "shardID": {
+          "type": "long"
+        },
+        "eventOrder": {
+          "type": "long"
+        },
+        "timestamp": {
+          "type": "date",
+          "format": "epoch_second"
+        },
+        "timestampMs": {
+          "type": "date",
+          "format": "epoch_millis"
+        }
+      }
+    }
+  }
+}

@@ -2,7 +2,9 @@
     available-indices =  [
         "rating", "transactions", "blocks", "validators", "miniblocks", "rounds", "accounts", "accountshistory",
         "receipts", "scresults", "accountsesdt", "accountsesdthistory", "epochinfo", "scdeploys", "tokens", "tags",
-        "logs", "delegators", "operations", "esdts", "values", "events", "executionresults"
+        "logs", "delegators", "operations", "esdts", "values", "events", "executionresults",
+        "drwa-denials", "drwa-identities", "drwa-holder-compliance", "drwa-attestations", "drwa-token-policies",
+        "drwa-control-events", "mrv-anchored-proofs"
     ]
     use-templates-from-files = true
     [config.policies]

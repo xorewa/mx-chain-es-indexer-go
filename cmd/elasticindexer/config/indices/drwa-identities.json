@@ -1,0 +1,59 @@
+{
+  "index_patterns": [
+    "drwa-identities-*"
+  ],
+  "template": {
+    "settings": {
+      "number_of_replicas": 0,
+      "number_of_shards": 3
+    },
+    "mappings": {
+      "properties": {
+        "txHash": {
+          "type": "keyword"
+        },
+        "subject": {
+          "type": "keyword"
+        },
+        "eventType": {
+          "type": "keyword"
+        },
+        "blockHash": {
+          "type": "keyword"
+        },
+        "blockRound": {
+          "type": "long"
+        },
+        "isFinalized": {
+          "type": "boolean"
+        },
+        "shardID": {
+          "type": "long"
+        },
+        "eventOrder": {
+          "type": "long"
+        },
+        "jurisdictionCode": {
+          "type": "keyword"
+        },
+        "entityType": {
+          "type": "keyword"
+        },
+        "kycStatus": {
+          "type": "keyword"
+        },
+        "amlStatus": {
+          "type": "keyword"
+        },
+        "timestamp": {
+          "type": "date",
+          "format": "epoch_second"
+        },
+        "timestampMs": {
+          "type": "date",
+          "format": "epoch_millis"
+        }
+      }
+    }
+  }
+}
