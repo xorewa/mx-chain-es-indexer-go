@@ -14,6 +14,7 @@ import (
 
 type dataIndexerStub struct {
 	saveBlockCalled          func(outportBlock *outport.OutportBlock) error
+	finalizedBlockCalled     func(finalizedBlock *outport.FinalizedBlock) error
 	setCurrentSettingsCalled func(settings outport.OutportConfig) error
 	closeCalled              func() error
 }
@@ -45,7 +46,10 @@ func (stub *dataIndexerStub) SaveAccounts(_ *outport.Accounts) error {
 	return nil
 }
 
-func (stub *dataIndexerStub) FinalizedBlock(_ *outport.FinalizedBlock) error {
+func (stub *dataIndexerStub) FinalizedBlock(finalizedBlock *outport.FinalizedBlock) error {
+	if stub.finalizedBlockCalled != nil {
+		return stub.finalizedBlockCalled(finalizedBlock)
+	}
 	return nil
 }
 
@@ -142,6 +146,44 @@ func TestIndexer_ProcessPayloadShouldDispatchAndRecordMetrics(t *testing.T) {
 	require.False(t, recordedMetrics.GotError)
 	require.Equal(t, uint64(len(payload)), recordedMetrics.MessageLen)
 	require.Equal(t, outport.TopicSaveBlock+"_7", recordedMetrics.Topic)
+}
+
+func TestIndexer_ProcessPayloadShouldDispatchFinalizedBlock(t *testing.T) {
+	marshaller := &marshal.GogoProtoMarshalizer{}
+	expectedHash := []byte{0xaa, 0xbb, 0xcc}
+	payload, err := marshaller.Marshal(&outport.FinalizedBlock{
+		ShardID:    4,
+		HeaderHash: expectedHash,
+	})
+	require.Nil(t, err)
+
+	wasFinalized := false
+	var recordedMetrics metrics.ArgsAddIndexingData
+	idx, err := NewIndexer(ArgsIndexer{
+		Marshaller: marshaller,
+		DataIndexer: &dataIndexerStub{
+			finalizedBlockCalled: func(finalizedBlock *outport.FinalizedBlock) error {
+				wasFinalized = true
+				require.Equal(t, uint32(4), finalizedBlock.GetShardID())
+				require.Equal(t, expectedHash, finalizedBlock.GetHeaderHash())
+				return nil
+			},
+		},
+		StatusMetrics: &statusMetricsStub{
+			addIndexingDataCalled: func(args metrics.ArgsAddIndexingData) {
+				recordedMetrics = args
+			},
+		},
+	})
+	require.Nil(t, err)
+
+	err = idx.ProcessPayload(payload, outport.TopicFinalizedBlock, 1)
+
+	require.Nil(t, err)
+	require.True(t, wasFinalized)
+	require.False(t, recordedMetrics.GotError)
+	require.Equal(t, uint64(len(payload)), recordedMetrics.MessageLen)
+	require.Equal(t, outport.TopicFinalizedBlock+"_4", recordedMetrics.Topic)
 }
 
 func TestIndexer_ProcessPayloadShouldIgnoreUnknownTopic(t *testing.T) {
