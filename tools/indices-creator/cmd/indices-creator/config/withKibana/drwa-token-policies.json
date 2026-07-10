@@ -13,9 +13,6 @@
 			"globalPause": {
 				"type": "boolean"
 			},
-			"policyId": {
-				"type": "keyword"
-			},
 			"regulated": {
 				"type": "boolean"
 			},
@@ -23,6 +20,12 @@
 				"type": "long"
 			},
 			"strictAuditorMode": {
+				"type": "boolean"
+			},
+			"travelRuleRequired": {
+				"type": "boolean"
+			},
+			"sanctionsScreeningEnabled": {
 				"type": "boolean"
 			},
 			"timestamp": {

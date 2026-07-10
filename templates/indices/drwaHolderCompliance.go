@@ -60,6 +60,24 @@ var DrwaHolderCompliance = Object{
 				"auditorAuthorized": Object{
 					"type": "boolean",
 				},
+				"lockUntilRound": Object{
+					"type": "long",
+				},
+				"travelRuleAttested": Object{
+					"type": "boolean",
+				},
+				"sanctionsCleared": Object{
+					"type": "boolean",
+				},
+				"sanctionsScreeningCid": Object{
+					"type": "keyword",
+				},
+				"uboParentEntity": Object{
+					"type": "keyword",
+				},
+				"ownershipPct": Object{
+					"type": "long",
+				},
 				"expiryRound": Object{
 					"type": "long",
 				},

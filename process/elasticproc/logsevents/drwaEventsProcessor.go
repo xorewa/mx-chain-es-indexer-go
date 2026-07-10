@@ -251,36 +251,33 @@ func (dep *drwaEventsProcessor) tryBuildTokenInfo(identifier string, args *argsP
 	topics := args.event.GetTopics()
 	switch identifier {
 	case drwaAssetRegisteredEvent:
-		if len(topics) < 3 {
-			return nil
-		}
-
-		if len(topics[0]) > maxTopicLength || len(topics[1]) > maxTopicLength {
-			return nil
-		}
-
-		return &data.TokenInfo{
-			Token: string(topics[0]),
-			Drwa: &data.DrwaTokenInfo{
-				Regulated: bytesToBool(topics[2]),
-				PolicyID:  string(topics[1]),
-			},
-			DrwaUpdate: true,
-		}
-	case drwaAssetUpdatedEvent:
 		if len(topics) < 2 {
 			return nil
 		}
 
-		if len(topics[0]) > maxTopicLength || len(topics[1]) > maxTopicLength {
+		if len(topics[0]) > maxTopicLength {
 			return nil
 		}
 
 		return &data.TokenInfo{
 			Token: string(topics[0]),
 			Drwa: &data.DrwaTokenInfo{
-				PolicyID: string(topics[1]),
+				Regulated: bytesToBool(topics[1]),
 			},
+			DrwaUpdate: true,
+		}
+	case drwaAssetUpdatedEvent:
+		if len(topics) < 1 {
+			return nil
+		}
+
+		if len(topics[0]) > maxTopicLength {
+			return nil
+		}
+
+		return &data.TokenInfo{
+			Token:      string(topics[0]),
+			Drwa:       &data.DrwaTokenInfo{},
 			DrwaUpdate: true,
 		}
 	case drwaTokenPolicyEvent:
@@ -288,14 +285,22 @@ func (dep *drwaEventsProcessor) tryBuildTokenInfo(identifier string, args *argsP
 			return nil
 		}
 
+		drwa := &data.DrwaTokenInfo{
+			Regulated:          bytesToBool(topics[1]),
+			GlobalPause:        bytesToBool(topics[2]),
+			StrictAuditorMode:  bytesToBool(topics[3]),
+			TokenPolicyVersion: big.NewInt(0).SetBytes(topics[4]).Uint64(),
+		}
+		if len(topics) >= 6 {
+			drwa.TravelRuleRequired = bytesToBool(topics[5])
+		}
+		if len(topics) >= 7 {
+			drwa.SanctionsScreeningEnabled = bytesToBool(topics[6])
+		}
+
 		return &data.TokenInfo{
-			Token: string(topics[0]),
-			Drwa: &data.DrwaTokenInfo{
-				Regulated:          bytesToBool(topics[1]),
-				GlobalPause:        bytesToBool(topics[2]),
-				StrictAuditorMode:  bytesToBool(topics[3]),
-				TokenPolicyVersion: big.NewInt(0).SetBytes(topics[4]).Uint64(),
-			},
+			Token:      string(topics[0]),
+			Drwa:       drwa,
 			DrwaUpdate: true,
 		}
 	case drwaGlobalPauseEvent:
@@ -407,7 +412,7 @@ func (dep *drwaEventsProcessor) tryBuildTokenPolicyRecord(identifier string, arg
 	topics := args.event.GetTopics()
 	switch identifier {
 	case drwaAssetRegisteredEvent:
-		if len(topics) < 3 || len(topics[0]) > maxTopicLength || len(topics[1]) > maxTopicLength {
+		if len(topics) < 2 || len(topics[0]) > maxTopicLength {
 			return nil
 		}
 
@@ -420,13 +425,12 @@ func (dep *drwaEventsProcessor) tryBuildTokenPolicyRecord(identifier string, arg
 			IsFinalized: false,
 			ShardID:     args.selfShardID,
 			EventOrder:  args.eventOrder,
-			PolicyID:    string(topics[1]),
-			Regulated:   bytesToBool(topics[2]),
+			Regulated:   bytesToBool(topics[1]),
 			Timestamp:   args.timestamp,
 			TimestampMs: args.timestampMs,
 		}
 	case drwaAssetUpdatedEvent:
-		if len(topics) < 2 || len(topics[0]) > maxTopicLength || len(topics[1]) > maxTopicLength {
+		if len(topics) < 1 || len(topics[0]) > maxTopicLength {
 			return nil
 		}
 
@@ -439,7 +443,6 @@ func (dep *drwaEventsProcessor) tryBuildTokenPolicyRecord(identifier string, arg
 			IsFinalized: false,
 			ShardID:     args.selfShardID,
 			EventOrder:  args.eventOrder,
-			PolicyID:    string(topics[1]),
 			Timestamp:   args.timestamp,
 			TimestampMs: args.timestampMs,
 		}
@@ -448,7 +451,7 @@ func (dep *drwaEventsProcessor) tryBuildTokenPolicyRecord(identifier string, arg
 			return nil
 		}
 
-		return &data.DrwaTokenPolicyRecord{
+		record := &data.DrwaTokenPolicyRecord{
 			TxHash:             args.txHashHexEncoded,
 			TokenID:            string(topics[0]),
 			EventType:          identifier,
@@ -464,6 +467,13 @@ func (dep *drwaEventsProcessor) tryBuildTokenPolicyRecord(identifier string, arg
 			Timestamp:          args.timestamp,
 			TimestampMs:        args.timestampMs,
 		}
+		if len(topics) >= 6 {
+			record.TravelRuleRequired = bytesToBool(topics[5])
+		}
+		if len(topics) >= 7 {
+			record.SanctionsScreeningEnabled = bytesToBool(topics[6])
+		}
+		return record
 	case drwaGlobalPauseEvent:
 		if len(topics) < 2 || len(topics[0]) > maxTopicLength {
 			return nil
@@ -640,6 +650,30 @@ func (dep *drwaEventsProcessor) tryBuildHolderComplianceRecord(identifier string
 	if len(topics) >= 11 {
 		auditorAuthorized := bytesToBool(topics[10])
 		record.AuditorAuthorized = &auditorAuthorized
+	}
+	if len(topics) >= 12 {
+		record.LockUntilRound = big.NewInt(0).SetBytes(topics[11]).Uint64()
+	}
+	if len(topics) >= 13 {
+		record.TravelRuleAttested = bytesToBool(topics[12])
+	}
+	if len(topics) >= 14 {
+		record.SanctionsCleared = bytesToBool(topics[13])
+	}
+	if len(topics) >= 15 {
+		if len(topics[14]) > maxTopicLength {
+			return nil
+		}
+		record.SanctionsScreeningCID = string(topics[14])
+	}
+	if len(topics) >= 16 {
+		if len(topics[15]) > maxTopicLength {
+			return nil
+		}
+		record.UboParentEntity = string(topics[15])
+	}
+	if len(topics) >= 17 {
+		record.OwnershipPct = uint32(big.NewInt(0).SetBytes(topics[16]).Uint64())
 	}
 	return record
 }

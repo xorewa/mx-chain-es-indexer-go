@@ -33,9 +33,6 @@
         "eventOrder": {
           "type": "long"
         },
-        "policyId": {
-          "type": "keyword"
-        },
         "regulated": {
           "type": "boolean"
         },
@@ -43,6 +40,12 @@
           "type": "boolean"
         },
         "strictAuditorMode": {
+          "type": "boolean"
+        },
+        "travelRuleRequired": {
+          "type": "boolean"
+        },
+        "sanctionsScreeningEnabled": {
           "type": "boolean"
         },
         "whitePaperCid": {

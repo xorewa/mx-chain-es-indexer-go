@@ -36,9 +36,6 @@ var DrwaTokenPolicies = Object{
 				"eventOrder": Object{
 					"type": "long",
 				},
-				"policyId": Object{
-					"type": "keyword",
-				},
 				"regulated": Object{
 					"type": "boolean",
 				},
@@ -46,6 +43,12 @@ var DrwaTokenPolicies = Object{
 					"type": "boolean",
 				},
 				"strictAuditorMode": Object{
+					"type": "boolean",
+				},
+				"travelRuleRequired": Object{
+					"type": "boolean",
+				},
+				"sanctionsScreeningEnabled": Object{
 					"type": "boolean",
 				},
 				"whitePaperCid": Object{

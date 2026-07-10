@@ -57,6 +57,24 @@
         "auditorAuthorized": {
           "type": "boolean"
         },
+        "lockUntilRound": {
+          "type": "long"
+        },
+        "travelRuleAttested": {
+          "type": "boolean"
+        },
+        "sanctionsCleared": {
+          "type": "boolean"
+        },
+        "sanctionsScreeningCid": {
+          "type": "keyword"
+        },
+        "uboParentEntity": {
+          "type": "keyword"
+        },
+        "ownershipPct": {
+          "type": "long"
+        },
         "expiryRound": {
           "type": "long"
         },

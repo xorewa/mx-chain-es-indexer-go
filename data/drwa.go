@@ -33,25 +33,31 @@ type DrwaDenialRecord struct {
 // DrwaHolderComplianceRecord is a persistent record for a holder compliance mirror update.
 // Written to the drwa-holder-compliance Elasticsearch index.
 type DrwaHolderComplianceRecord struct {
-	TxHash              string `json:"txHash"`
-	TokenID             string `json:"tokenId"`
-	Holder              string `json:"holder"`
-	BlockHash           string `json:"blockHash,omitempty"`
-	BlockRound          uint64 `json:"blockRound,omitempty"`
-	IsFinalized         bool   `json:"isFinalized,omitempty"`
-	ShardID             uint32 `json:"shardID,omitempty"`
-	EventOrder          int    `json:"eventOrder,omitempty"`
-	HolderPolicyVersion uint64 `json:"holderPolicyVersion,omitempty"`
-	KYCStatus           string `json:"kycStatus,omitempty"`
-	AMLStatus           string `json:"amlStatus,omitempty"`
-	InvestorClass       string `json:"investorClass,omitempty"`
-	JurisdictionCode    string `json:"jurisdictionCode,omitempty"`
-	TransferLocked      bool   `json:"transferLocked,omitempty"`
-	ReceiveLocked       bool   `json:"receiveLocked,omitempty"`
-	AuditorAuthorized   *bool  `json:"auditorAuthorized,omitempty"`
-	ExpiryRound         uint64 `json:"expiryRound,omitempty"`
-	Timestamp           uint64 `json:"timestamp,omitempty"`
-	TimestampMs         uint64 `json:"timestampMs,omitempty"`
+	TxHash                string `json:"txHash"`
+	TokenID               string `json:"tokenId"`
+	Holder                string `json:"holder"`
+	BlockHash             string `json:"blockHash,omitempty"`
+	BlockRound            uint64 `json:"blockRound,omitempty"`
+	IsFinalized           bool   `json:"isFinalized,omitempty"`
+	ShardID               uint32 `json:"shardID,omitempty"`
+	EventOrder            int    `json:"eventOrder,omitempty"`
+	HolderPolicyVersion   uint64 `json:"holderPolicyVersion,omitempty"`
+	KYCStatus             string `json:"kycStatus,omitempty"`
+	AMLStatus             string `json:"amlStatus,omitempty"`
+	InvestorClass         string `json:"investorClass,omitempty"`
+	JurisdictionCode      string `json:"jurisdictionCode,omitempty"`
+	TransferLocked        bool   `json:"transferLocked,omitempty"`
+	ReceiveLocked         bool   `json:"receiveLocked,omitempty"`
+	AuditorAuthorized     *bool  `json:"auditorAuthorized,omitempty"`
+	LockUntilRound        uint64 `json:"lockUntilRound,omitempty"`
+	TravelRuleAttested    bool   `json:"travelRuleAttested,omitempty"`
+	SanctionsCleared      bool   `json:"sanctionsCleared,omitempty"`
+	SanctionsScreeningCID string `json:"sanctionsScreeningCid,omitempty"`
+	UboParentEntity       string `json:"uboParentEntity,omitempty"`
+	OwnershipPct          uint32 `json:"ownershipPct,omitempty"`
+	ExpiryRound           uint64 `json:"expiryRound,omitempty"`
+	Timestamp             uint64 `json:"timestamp,omitempty"`
+	TimestampMs           uint64 `json:"timestampMs,omitempty"`
 }
 
 // DrwaIdentityRecord is a persistent record for DRWA identity lifecycle events.
@@ -100,24 +106,25 @@ type DrwaAttestationRecord struct {
 // DrwaTokenPolicyRecord is a persistent record for DRWA token policy history.
 // Written to the drwa-token-policies Elasticsearch index.
 type DrwaTokenPolicyRecord struct {
-	TxHash             string `json:"txHash"`
-	TokenID            string `json:"tokenId"`
-	EventType          string `json:"eventType"`
-	BlockHash          string `json:"blockHash,omitempty"`
-	BlockRound         uint64 `json:"blockRound,omitempty"`
-	IsFinalized        bool   `json:"isFinalized,omitempty"`
-	ShardID            uint32 `json:"shardID,omitempty"`
-	EventOrder         int    `json:"eventOrder,omitempty"`
-	PolicyID           string `json:"policyId,omitempty"`
-	Regulated          bool   `json:"regulated,omitempty"`
-	GlobalPause        bool   `json:"globalPause,omitempty"`
-	StrictAuditorMode  bool   `json:"strictAuditorMode,omitempty"`
-	WhitePaperCID      string `json:"whitePaperCid,omitempty"`
-	RegistrationStatus string `json:"registrationStatus,omitempty"`
-	WindDownInitiated  bool   `json:"windDownInitiated,omitempty"`
-	TokenPolicyVersion uint64 `json:"tokenPolicyVersion,omitempty"`
-	Timestamp          uint64 `json:"timestamp,omitempty"`
-	TimestampMs        uint64 `json:"timestampMs,omitempty"`
+	TxHash                    string `json:"txHash"`
+	TokenID                   string `json:"tokenId"`
+	EventType                 string `json:"eventType"`
+	BlockHash                 string `json:"blockHash,omitempty"`
+	BlockRound                uint64 `json:"blockRound,omitempty"`
+	IsFinalized               bool   `json:"isFinalized,omitempty"`
+	ShardID                   uint32 `json:"shardID,omitempty"`
+	EventOrder                int    `json:"eventOrder,omitempty"`
+	Regulated                 bool   `json:"regulated,omitempty"`
+	GlobalPause               bool   `json:"globalPause,omitempty"`
+	StrictAuditorMode         bool   `json:"strictAuditorMode,omitempty"`
+	TravelRuleRequired        bool   `json:"travelRuleRequired,omitempty"`
+	SanctionsScreeningEnabled bool   `json:"sanctionsScreeningEnabled,omitempty"`
+	WhitePaperCID             string `json:"whitePaperCid,omitempty"`
+	RegistrationStatus        string `json:"registrationStatus,omitempty"`
+	WindDownInitiated         bool   `json:"windDownInitiated,omitempty"`
+	TokenPolicyVersion        uint64 `json:"tokenPolicyVersion,omitempty"`
+	Timestamp                 uint64 `json:"timestamp,omitempty"`
+	TimestampMs               uint64 `json:"timestampMs,omitempty"`
 }
 
 // DrwaControlEventRecord is a generic persistent record for DRWA governance and

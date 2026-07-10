@@ -119,7 +119,6 @@ func TestSerializeTokensDRWAUpdateWritesOnlyDRWAProjection(t *testing.T) {
 		DrwaUpdate: true,
 		Drwa: &data.DrwaTokenInfo{
 			Regulated:          true,
-			PolicyID:           "policy-1",
 			TokenPolicyVersion: 2,
 		},
 	}
@@ -132,7 +131,7 @@ func TestSerializeTokensDRWAUpdateWritesOnlyDRWAProjection(t *testing.T) {
 	body := buffSlice.Buffers()[0].String()
 	require.Contains(t, body, `{ "update" : { "_index":"tokens", "_id" : "CARBON-ab12cd" } }`)
 	require.Contains(t, body, `ctx._source.drwa.putAll(params.drwa)`)
-	require.Contains(t, body, `"drwa": {"regulated":true,"policyId":"policy-1","tokenPolicyVersion":2}`)
+	require.Contains(t, body, `"drwa": {"regulated":true,"tokenPolicyVersion":2}`)
 	require.NotContains(t, body, "drwa_update")
 	require.NotContains(t, body, "drwaUpdate")
 }

@@ -24,7 +24,6 @@ func TestDRWAEventsProcessorDefaultConstructorFailsClosed(t *testing.T) {
 			Identifier: []byte(drwaAssetRegisteredEvent),
 			Topics: [][]byte{
 				[]byte("HOTEL-1234"),
-				[]byte("policy-hotel-1"),
 				[]byte("true"),
 			},
 		},
@@ -67,7 +66,6 @@ func TestDRWAEventsProcessorBuildsTokenInfoForAssetRegistration(t *testing.T) {
 			Identifier: []byte(drwaAssetRegisteredEvent),
 			Topics: [][]byte{
 				[]byte("HOTEL-1234"),
-				[]byte("policy-hotel-1"),
 				[]byte("true"),
 			},
 		},
@@ -79,7 +77,6 @@ func TestDRWAEventsProcessorBuildsTokenInfoForAssetRegistration(t *testing.T) {
 	require.NotNil(t, res.tokenInfo)
 	require.Equal(t, "HOTEL-1234", res.tokenInfo.Token)
 	require.True(t, res.tokenInfo.Drwa.Regulated)
-	require.Equal(t, "policy-hotel-1", res.tokenInfo.Drwa.PolicyID)
 }
 
 func TestDRWAEventsProcessorRejectsUnauthorizedEmitter(t *testing.T) {
@@ -157,7 +154,6 @@ func TestDRWAEventsProcessorBuildsTokenInfoForAssetUpdate(t *testing.T) {
 			Identifier: []byte(drwaAssetUpdatedEvent),
 			Topics: [][]byte{
 				[]byte("HOTEL-1234"),
-				[]byte("policy-hotel-2"),
 			},
 		},
 		txs:              map[string]*data.Transaction{},
@@ -169,10 +165,8 @@ func TestDRWAEventsProcessorBuildsTokenInfoForAssetUpdate(t *testing.T) {
 	require.True(t, res.processed)
 	require.NotNil(t, res.tokenInfo)
 	require.Equal(t, "HOTEL-1234", res.tokenInfo.Token)
-	require.Equal(t, "policy-hotel-2", res.tokenInfo.Drwa.PolicyID)
 	require.NotNil(t, res.drwaTokenPolicy)
 	require.Equal(t, "HOTEL-1234", res.drwaTokenPolicy.TokenID)
-	require.Equal(t, "policy-hotel-2", res.drwaTokenPolicy.PolicyID)
 	require.Equal(t, drwaAssetUpdatedEvent, res.drwaTokenPolicy.EventType)
 	require.Equal(t, "block-hash-asset-update", res.drwaTokenPolicy.BlockHash)
 	require.Equal(t, uint64(42), res.drwaTokenPolicy.BlockRound)
@@ -192,6 +186,8 @@ func TestDRWAEventsProcessorBuildsTokenInfoForTokenPolicy(t *testing.T) {
 				[]byte("true"),
 				[]byte("false"),
 				{2},
+				[]byte("true"),
+				[]byte("true"),
 			},
 		},
 		txs:              map[string]*data.Transaction{},
@@ -204,9 +200,13 @@ func TestDRWAEventsProcessorBuildsTokenInfoForTokenPolicy(t *testing.T) {
 	require.True(t, res.tokenInfo.Drwa.GlobalPause)
 	require.False(t, res.tokenInfo.Drwa.StrictAuditorMode)
 	require.Equal(t, uint64(2), res.tokenInfo.Drwa.TokenPolicyVersion)
+	require.True(t, res.tokenInfo.Drwa.TravelRuleRequired)
+	require.True(t, res.tokenInfo.Drwa.SanctionsScreeningEnabled)
 	require.NotNil(t, res.drwaTokenPolicy)
 	require.Equal(t, "HOTEL-1234", res.drwaTokenPolicy.TokenID)
 	require.Equal(t, uint64(2), res.drwaTokenPolicy.TokenPolicyVersion)
+	require.True(t, res.drwaTokenPolicy.TravelRuleRequired)
+	require.True(t, res.drwaTokenPolicy.SanctionsScreeningEnabled)
 }
 
 func TestDRWAEventsProcessorBuildsTokenInfoForMICAAndWindDownEvents(t *testing.T) {
@@ -325,6 +325,12 @@ func TestDRWAEventsProcessorBuildsHolderComplianceRecord(t *testing.T) {
 				[]byte("true"),
 				[]byte("false"),
 				[]byte("true"),
+				{0x04, 0xd2},
+				[]byte("true"),
+				[]byte("true"),
+				[]byte("cid:screening/123"),
+				[]byte("entity:parent-1"),
+				{0x09, 0xc4},
 			},
 		},
 		txs:              map[string]*data.Transaction{},
@@ -351,6 +357,12 @@ func TestDRWAEventsProcessorBuildsHolderComplianceRecord(t *testing.T) {
 	require.False(t, res.drwaHolderCompliance.ReceiveLocked)
 	require.NotNil(t, res.drwaHolderCompliance.AuditorAuthorized)
 	require.True(t, *res.drwaHolderCompliance.AuditorAuthorized)
+	require.Equal(t, uint64(1234), res.drwaHolderCompliance.LockUntilRound)
+	require.True(t, res.drwaHolderCompliance.TravelRuleAttested)
+	require.True(t, res.drwaHolderCompliance.SanctionsCleared)
+	require.Equal(t, "cid:screening/123", res.drwaHolderCompliance.SanctionsScreeningCID)
+	require.Equal(t, "entity:parent-1", res.drwaHolderCompliance.UboParentEntity)
+	require.Equal(t, uint32(2500), res.drwaHolderCompliance.OwnershipPct)
 	require.Equal(t, "block-hash-holder", res.drwaHolderCompliance.BlockHash)
 	require.Equal(t, uint64(77), res.drwaHolderCompliance.BlockRound)
 	require.False(t, res.drwaHolderCompliance.IsFinalized)
