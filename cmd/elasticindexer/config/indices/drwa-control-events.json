@@ -15,10 +15,16 @@
         "eventType": {
           "type": "keyword"
         },
+        "emitter": {
+          "type": "keyword"
+        },
         "governance": {
           "type": "keyword"
         },
         "topics": {
+          "type": "keyword"
+        },
+        "data": {
           "type": "keyword"
         },
         "blockHash": {

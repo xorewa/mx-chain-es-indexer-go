@@ -758,7 +758,9 @@ func (dep *drwaEventsProcessor) tryBuildControlEventRecord(identifier string, ar
 	record := &data.DrwaControlEventRecord{
 		TxHash:      args.txHashHexEncoded,
 		EventType:   identifier,
+		Emitter:     string(args.event.GetAddress()),
 		Topics:      encodeTopics(topics),
+		Data:        hex.EncodeToString(args.event.GetData()),
 		BlockHash:   args.blockHash,
 		BlockRound:  args.blockRound,
 		IsFinalized: false,

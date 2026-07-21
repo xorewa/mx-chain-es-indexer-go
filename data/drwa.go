@@ -131,15 +131,21 @@ type DrwaTokenPolicyRecord struct {
 // other control-plane events whose topic schema is only partially standardized
 // in the checked-in repository state.
 type DrwaControlEventRecord struct {
-	TxHash      string   `json:"txHash"`
-	EventType   string   `json:"eventType"`
-	Governance  string   `json:"governance,omitempty"`
-	Topics      []string `json:"topics,omitempty"`
-	BlockHash   string   `json:"blockHash,omitempty"`
-	BlockRound  uint64   `json:"blockRound,omitempty"`
-	IsFinalized bool     `json:"isFinalized,omitempty"`
-	ShardID     uint32   `json:"shardID,omitempty"`
-	EventOrder  int      `json:"eventOrder,omitempty"`
-	Timestamp   uint64   `json:"timestamp,omitempty"`
-	TimestampMs uint64   `json:"timestampMs,omitempty"`
+	TxHash    string `json:"txHash"`
+	EventType string `json:"eventType"`
+	// Emitter binds the event to the contract that emitted it. API consumers
+	// must not trust a DRWA event identifier without this binding.
+	Emitter    string   `json:"emitter,omitempty"`
+	Governance string   `json:"governance,omitempty"`
+	Topics     []string `json:"topics,omitempty"`
+	// Data retains the exact hex-encoded non-indexed event payload. Topics
+	// alone cannot reconstruct auth-admin proposal and approval metadata.
+	Data        string `json:"data,omitempty"`
+	BlockHash   string `json:"blockHash,omitempty"`
+	BlockRound  uint64 `json:"blockRound,omitempty"`
+	IsFinalized bool   `json:"isFinalized,omitempty"`
+	ShardID     uint32 `json:"shardID,omitempty"`
+	EventOrder  int    `json:"eventOrder,omitempty"`
+	Timestamp   uint64 `json:"timestamp,omitempty"`
+	TimestampMs uint64 `json:"timestampMs,omitempty"`
 }

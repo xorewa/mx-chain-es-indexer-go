@@ -18,10 +18,16 @@ var DrwaControlEvents = Object{
 				"eventType": Object{
 					"type": "keyword",
 				},
+				"emitter": Object{
+					"type": "keyword",
+				},
 				"governance": Object{
 					"type": "keyword",
 				},
 				"topics": Object{
+					"type": "keyword",
+				},
+				"data": Object{
 					"type": "keyword",
 				},
 				"blockHash": Object{

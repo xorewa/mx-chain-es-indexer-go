@@ -10,6 +10,9 @@
 			"eventType": {
 				"type": "keyword"
 			},
+			"emitter": {
+				"type": "keyword"
+			},
 			"governance": {
 				"type": "keyword"
 			},
@@ -21,6 +24,9 @@
 				"type": "date"
 			},
 			"topics": {
+				"type": "keyword"
+			},
+			"data": {
 				"type": "keyword"
 			},
 			"txHash": {

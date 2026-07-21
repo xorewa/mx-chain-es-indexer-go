@@ -690,10 +690,12 @@ func TestDRWAEventsProcessorProcessesAuthAdminAuditEvents(t *testing.T) {
 		res := proc.processEvent(&argsProcessEvent{
 			event: &transaction.Event{
 				Identifier: []byte(identifier),
+				Address:    []byte("erd1authadmin"),
 				Topics: [][]byte{
 					[]byte("action-or-subject"),
 					[]byte("erd1signer"),
 				},
+				Data: []byte{0xca, 0xfe},
 			},
 			txs:              map[string]*data.Transaction{},
 			txHashHexEncoded: "hash",
@@ -711,6 +713,8 @@ func TestDRWAEventsProcessorProcessesAuthAdminAuditEvents(t *testing.T) {
 		require.Equal(t, "block-hash-auth-admin", res.drwaControlEvent.BlockHash)
 		require.Equal(t, uint64(456), res.drwaControlEvent.BlockRound)
 		require.Len(t, res.drwaControlEvent.Topics, 2)
+		require.Equal(t, "erd1authadmin", res.drwaControlEvent.Emitter)
+		require.Equal(t, "cafe", res.drwaControlEvent.Data)
 	}
 }
 
