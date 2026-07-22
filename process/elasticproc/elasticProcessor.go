@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"sync"
+	"time"
 
 	"github.com/multiversx/mx-chain-core-go/core"
 	"github.com/multiversx/mx-chain-core-go/core/check"
@@ -1056,6 +1057,7 @@ func (ei *elasticProcessor) FinalizedBlock(finalizedBlock *outport.FinalizedBloc
 	}
 
 	hashHex := hex.EncodeToString(finalizedBlock.GetHeaderHash())
+	startTime := time.Now()
 	query, err := json.Marshal(map[string]interface{}{
 		"script": map[string]interface{}{
 			"source": "ctx._source.isFinalized = true",
@@ -1077,13 +1079,35 @@ func (ei *elasticProcessor) FinalizedBlock(finalizedBlock *outport.FinalizedBloc
 	ctxWithValue := context.WithValue(context.Background(), request.ContextKey, request.ExtendTopicWithShardID(request.UpdateTopic, finalizedBlock.GetShardID()))
 	buff := bytes.NewBuffer(query)
 
+	updatedIndexes := 0
 	for _, index := range drwaMRVIndexes() {
 		if !ei.isIndexEnabled(index) {
 			continue
 		}
 		if err := ei.elasticClient.UpdateByQuery(ctxWithValue, index, bytes.NewBuffer(buff.Bytes())); err != nil {
+			log.Warn("elasticProcessor.FinalizedBlock DRWA/MRV finalization update failed",
+				"index", index,
+				"shard", finalizedBlock.GetShardID(),
+				"blockHash", hashHex,
+				"updatedIndexes", updatedIndexes,
+				"duration", time.Since(startTime),
+				"error", err,
+			)
 			return err
 		}
+		updatedIndexes++
+	}
+
+	if updatedIndexes > 0 {
+		// Debug-level instrumentation gives devnet soak runs a per-finalized-block
+		// latency and fan-out baseline without changing query behavior or adding
+		// production info-log volume.
+		log.Debug("elasticProcessor.FinalizedBlock DRWA/MRV finalization updates complete",
+			"shard", finalizedBlock.GetShardID(),
+			"blockHash", hashHex,
+			"updatedIndexes", updatedIndexes,
+			"duration", time.Since(startTime),
+		)
 	}
 
 	return nil
