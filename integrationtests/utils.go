@@ -46,6 +46,7 @@ func createESClient(url string) (elasticproc.DatabaseClientHandler, error) {
 	})
 }
 
+//nolint:unused // Used by integration-only helpers that are excluded from the default lint call graph.
 func elasticCredentialsFromEnv() (string, string) {
 	username := os.Getenv("ELASTIC_USERNAME")
 	password := os.Getenv("ELASTIC_PASSWORD")
