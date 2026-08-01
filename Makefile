@@ -1,6 +1,18 @@
 TESTS_TO_RUN := $(shell go list ./... | grep -v integrationtests | grep -v mock)
 ELASTIC_PASSWORD ?= elastic
+ES_PORT ?= 9200
+ES_TRANSPORT_PORT ?= 9300
+ES_URL ?= http://localhost:$(ES_PORT)
+ELASTIC_CONTAINER_NAME ?= elastic-container
+OPEN_SEARCH_CONTAINER_NAME ?= open-container
+OPEN_SEARCH_PERFORMANCE_PORT ?= 9600
 export ELASTIC_PASSWORD
+export ES_PORT
+export ES_TRANSPORT_PORT
+export ES_URL
+export ELASTIC_CONTAINER_NAME
+export OPEN_SEARCH_CONTAINER_NAME
+export OPEN_SEARCH_PERFORMANCE_PORT
 
 
 test:

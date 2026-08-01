@@ -1,6 +1,8 @@
-IMAGE_NAME=elastic-container
+IMAGE_NAME=${ELASTIC_CONTAINER_NAME:-elastic-container}
 DEFAULT_ES_VERSION=7.16.2
 DEFAULT_ES_USERNAME=elastic
+ES_PORT=${ES_PORT:-9200}
+ES_TRANSPORT_PORT=${ES_TRANSPORT_PORT:-9300}
 PROMETHEUS_CONTAINER_NAME=prometheus_container
 GRAFANA_CONTAINER_NAME=grafana_container
 GRAFANA_VERSION=10.0.3
@@ -56,13 +58,13 @@ start() {
   docker pull docker.elastic.co/elasticsearch/elasticsearch:${ES_VERSION}
 
   docker rm -f ${IMAGE_NAME} 2> /dev/null
-  docker run -d --name "${IMAGE_NAME}" -p 9200:9200  -p 9300:9300 \
+  docker run -d --name "${IMAGE_NAME}" -p "${ES_PORT}:9200" -p "${ES_TRANSPORT_PORT}:9300" \
    -e "discovery.type=single-node" -e "xpack.security.enabled=true" -e "ELASTIC_PASSWORD=${ELASTIC_PASSWORD}" -e "ES_JAVA_OPTS=-Xms512m -Xmx512m" \
     docker.elastic.co/elasticsearch/elasticsearch:${ES_VERSION}
   # Wait elastic cluster to start
   echo "Waiting Elasticsearch cluster to start..."
   for _ in $(seq 1 60); do
-    if elastic_curl -fsS "http://localhost:9200" > /dev/null; then
+    if elastic_curl -fsS "http://localhost:${ES_PORT}" > /dev/null; then
       break
     fi
     sleep 1s
@@ -79,18 +81,19 @@ delete() {
    ES_USERNAME=$(elastic_username)
 
    for str in ${INDICES_LIST[@]}; do
-      elastic_curl -XDELETE http://localhost:9200/$str-000001
-      elastic_curl -XDELETE http://localhost:9200/$str
-      elastic_curl -s -o /dev/null -w "%{http_code}" -X GET localhost:9200/_ilm/policy/$str-policy | grep -q 200 && elastic_curl -X DELETE localhost:9200/_ilm/policy/$str-policy
+      elastic_curl -XDELETE "http://localhost:${ES_PORT}/$str-000001"
+      elastic_curl -XDELETE "http://localhost:${ES_PORT}/$str"
+      elastic_curl -s -o /dev/null -w "%{http_code}" -X GET "localhost:${ES_PORT}/_ilm/policy/$str-policy" | grep -q 200 && elastic_curl -X DELETE "localhost:${ES_PORT}/_ilm/policy/$str-policy"
       echo
    done
 
-  elastic_curl -XDELETE http://localhost:9200/_template/*
+  elastic_curl -XDELETE "http://localhost:${ES_PORT}/_template/*"
   echo
 }
 
 
-IMAGE_OPEN_SEARCH=open-container
+IMAGE_OPEN_SEARCH=${OPEN_SEARCH_CONTAINER_NAME:-open-container}
+OPEN_SEARCH_PERFORMANCE_PORT=${OPEN_SEARCH_PERFORMANCE_PORT:-9600}
 DEFAULT_OPEN_SEARCH_VERSION=1.2.4
 
 start_open_search() {
@@ -102,13 +105,13 @@ start_open_search() {
   docker pull opensearchproject/opensearch:${OPEN_VERSION}
 
   docker rm -f ${IMAGE_OPEN_SEARCH} 2> /dev/null
-  docker run -d --name "${IMAGE_OPEN_SEARCH}" -p 9200:9200 -p 9600:9600 \
+  docker run -d --name "${IMAGE_OPEN_SEARCH}" -p "${ES_PORT}:9200" -p "${OPEN_SEARCH_PERFORMANCE_PORT}:9600" \
    -e "discovery.type=single-node" -e "plugins.security.disabled=true" -e "ES_JAVA_OPTS=-Xms512m -Xmx512m" \
    opensearchproject/opensearch:${OPEN_VERSION}
 
   echo "Waiting OpenSearch cluster to start..."
   for _ in $(seq 1 60); do
-    if curl -fsS "http://localhost:9200" > /dev/null; then
+    if curl -fsS "http://localhost:${ES_PORT}" > /dev/null; then
       return 0
     fi
     sleep 1s

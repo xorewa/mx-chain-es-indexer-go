@@ -831,7 +831,7 @@ func isValidDRWAPolicyKey(raw []byte) bool {
 	}
 
 	for _, b := range raw {
-		if !(isASCIIAlphaNumeric(b) || b == '.' || b == '_' || b == '-') {
+		if !isASCIIAlphaNumeric(b) && b != '.' && b != '_' && b != '-' {
 			return false
 		}
 	}
@@ -844,7 +844,7 @@ func isValidDRWAWhitePaperCID(raw []byte) bool {
 		return false
 	}
 
-	if !(strings.HasPrefix(string(raw), "Qm") || strings.HasPrefix(string(raw), "bafy")) {
+	if !strings.HasPrefix(string(raw), "Qm") && !strings.HasPrefix(string(raw), "bafy") {
 		return false
 	}
 

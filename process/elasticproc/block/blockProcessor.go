@@ -92,7 +92,7 @@ func (bp *blockProcessor) PrepareBlockForDB(obh *outport.OutportBlockWithHeader)
 		Size:                  int64(blockSizeInBytes),
 		SizeTxs:               int64(sizeTxs),
 		Timestamp:             converters.MillisecondsToSeconds(obh.BlockData.TimestampMs),
-		TimestampMs:           obh.OutportBlock.BlockData.GetTimestampMs(),
+		TimestampMs:           obh.BlockData.GetTimestampMs(),
 		TxCount:               numTxs,
 		NotarizedTxsCount:     notarizedTxs,
 		StateRootHash:         hex.EncodeToString(obh.Header.GetRootHash()),
