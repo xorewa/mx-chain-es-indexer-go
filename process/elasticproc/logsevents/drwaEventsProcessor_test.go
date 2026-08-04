@@ -1,6 +1,7 @@
 package logsevents
 
 import (
+	"strings"
 	"testing"
 
 	coredrwa "github.com/multiversx/mx-chain-core-go/data/drwa"
@@ -715,6 +716,24 @@ func TestDRWAEventsProcessorProcessesAuthAdminAuditEvents(t *testing.T) {
 		require.Len(t, res.drwaControlEvent.Topics, 2)
 		require.Equal(t, "erd1authadmin", res.drwaControlEvent.Emitter)
 		require.Equal(t, "cafe", res.drwaControlEvent.Data)
+	}
+}
+
+func TestDRWACanonicalEvents_ParitySet(t *testing.T) {
+	expected := []string{
+		drwaAssetRegisteredEvent, drwaAssetUpdatedEvent, drwaTokenPolicyEvent, drwaHolderComplianceEvent,
+		drwaTransferDeniedEvent, drwaTransferAllowedEvent, drwaGlobalPauseEvent, drwaMetadataProtectionEvent,
+		drwaWhitePaperCidSetEvent, drwaRegistrationStatusSetEvent, drwaIdentityRegisteredEvent,
+		drwaComplianceUpdatedEvent, drwaIdentityDeactivatedEvent, drwaIdentityErasedEvent, drwaWindDownInitiatedEvent,
+		drwaAuditorProposedEvent, drwaAuditorAcceptedEvent, drwaAuditorRevokedEvent, drwaAttestationOverwrittenEvent,
+		drwaAttestationRecordedEvent, drwaGovernanceProposedEvent, drwaGovernanceAcceptedEvent, drwaGovernanceRevokedEvent,
+		drwaAuthActionProposedEvent, drwaAuthActionSignedEvent, drwaAuthActionUnsignedEvent, drwaAuthActionDiscardedEvent,
+		drwaAuthActionPerformedEvent, drwaAuthorizedCallerUpdatedEvent, drwaSignerAddedEvent, drwaSignerRemovedEvent,
+		drwaSignerReplacedEvent, drwaQuorumChangedEvent,
+	}
+	require.Len(t, drwaCanonicalEventsMap, len(expected))
+	for _, identifier := range expected {
+		require.Contains(t, drwaCanonicalEventsMap, strings.ToLower(identifier), "missing canonical event %q", identifier)
 	}
 }
 
