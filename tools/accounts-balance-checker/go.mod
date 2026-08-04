@@ -1,6 +1,6 @@
 module github.com/multiversx/mx-chain-es-indexer-go/tools/accounts-balance-checker
 
-go 1.23
+go 1.26.2
 
 require (
 	github.com/elastic/go-elasticsearch/v7 v7.12.0
