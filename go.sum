@@ -115,8 +115,6 @@ github.com/modern-go/reflect2 v1.0.2 h1:xBagoLtFs94CBntxluKeaWgTMpvLxC4ur3nMaC9G
 github.com/modern-go/reflect2 v1.0.2/go.mod h1:yWuevngMOJpCy52FWWMvUC8ws7m/LJsjYzDa0/r8luk=
 github.com/mr-tron/base58 v1.3.0 h1:K6Y13R2h+dku0wOqKtecgRnBUBPrZzLZy5aIj8lCcJI=
 github.com/mr-tron/base58 v1.3.0/go.mod h1:2BuubE67DCSWwVfx37JWNG8emOC0sHEU4/HpcYgCLX8=
-github.com/multiversx/mx-chain-crypto-go v1.3.0 h1:0eK2bkDOMi8VbSPrB1/vGJSYT81IBtfL4zw+C4sWe/k=
-github.com/multiversx/mx-chain-crypto-go v1.3.0/go.mod h1:nPIkxxzyTP8IquWKds+22Q2OJ9W7LtusC7cAosz7ojM=
 github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 h1:C3w9PqII01/Oq1c1nUAm88MOHcQC9l5mIlSMApZMrHA=
 github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822/go.mod h1:+n7T8mK8HuQTcFwEeznm/DIxMOiR9yIdICNftLE1DvQ=
 github.com/nxadm/tail v1.4.4/go.mod h1:kenIhsEOeOJmVchQTgglprH7qJGnHDVpk1VPCcaMI8A=
@@ -172,6 +170,8 @@ github.com/xorewa/mx-chain-communication-go v0.0.0-20260804131217-755477acfd43 h
 github.com/xorewa/mx-chain-communication-go v0.0.0-20260804131217-755477acfd43/go.mod h1:g4fc3R+amGBAh3nayB+qyDrdMnn5vUctAI/c42rnniQ=
 github.com/xorewa/mx-chain-core-go v0.0.0-20260804130641-8340309cd696 h1:XX6dLYqgR40fEjQS9bksVPSYxbEM5m+XHq95lRDsQTM=
 github.com/xorewa/mx-chain-core-go v0.0.0-20260804130641-8340309cd696/go.mod h1:9Vbf/FZPk4MzcMyf4HWvWmFHYTD1dKAY70VrkKLmwWA=
+github.com/xorewa/mx-chain-crypto-go v0.0.0-20260804131210-5c42467bc7dc h1:2rbErcGi0u8bK2CwshExUOcCMItI9uovrCY/gJvFEhA=
+github.com/xorewa/mx-chain-crypto-go v0.0.0-20260804131210-5c42467bc7dc/go.mod h1:8BM4LIgpTZxWPNW3FQK8DY/l2QnVaukjbuwzXxZAoi8=
 github.com/xorewa/mx-chain-logger-go v0.0.0-20260804131017-9f0e946f3e2c h1:h7ydVZsNlSZBMAxzrFXkVBx2tnXCkmc3+W/3rgMOUwY=
 github.com/xorewa/mx-chain-logger-go v0.0.0-20260804131017-9f0e946f3e2c/go.mod h1:c5Q70USsRhvOx+3VL9ZyVuteK0jmLn62YHC8Zd62OQA=
 github.com/xorewa/mx-chain-vm-common-go v0.0.0-20260804131214-5e33a90c192a h1:fSqGiVkeQPuPHETRETwQ/G0KkuVKOMI6YtVQY6XFO3Y=
